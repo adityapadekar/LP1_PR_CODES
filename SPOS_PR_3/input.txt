@@ -1,0 +1,9 @@
+MACRO M2 &p,&q,&u=CREG,&v=DREG
+MOVER &u,&p
+MOVER &v,&q
+M3 73,173
+ADD &u,='15'
+ADD &v,='10'
+MEND
+M2 100,200,&u=AREG,&v=BREG
+

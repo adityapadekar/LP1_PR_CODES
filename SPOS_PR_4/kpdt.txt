@@ -1,0 +1,2 @@
+u	CREG
+v	DREG
