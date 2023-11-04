@@ -28,7 +28,7 @@ public class macroPass2 {
 		while((s=b4.readLine())!=null)
 			kpdt.addElement(s);
 		while((s=b2.readLine())!=null){
-			String word[]=s.split("\t");
+			String word[]=s.split("\\s");
 			s1=word[0]+word[1];
 			macroNameHash.put(word[0],1);
 			kpHash.put(s1,Integer.parseInt(word[2]));
