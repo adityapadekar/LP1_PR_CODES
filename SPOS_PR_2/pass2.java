@@ -13,7 +13,6 @@ public class pass2 {
         FileWriter f1 = new FileWriter("output.txt");
         // using hashmap for data structures
         HashMap<Integer, String> symSymbol = new HashMap<Integer, String>();
-        HashMap<Integer, String> litSymbol = new HashMap<Integer, String>();
         HashMap<Integer, String> litAddr = new HashMap<Integer, String>();
 
         String s;
@@ -27,7 +26,6 @@ public class pass2 {
         // reads the first line from literal table
         while ((s = b3.readLine()) != null) {
             String word[] = s.split("\t\t");
-            litSymbol.put(littabPointer, word[0]);
             litAddr.put(littabPointer++, word[1]);
         }
         // reads the first line from intermediate code
@@ -45,9 +43,9 @@ public class pass2 {
                     f1.write("0 ");
                     offset = 0;
                 }
-                if (s.charAt(8 + offset) == 'S')
+                if (s.charAt(8 + offset) == 'S') {
                     f1.write(symSymbol.get(Integer.parseInt(s.substring(10 + offset, s.length() - 1))) + "\n");
-                else
+                } else
                     f1.write(litAddr.get(Integer.parseInt(s.substring(10 + offset, s.length() - 1))) + "\n");
             } else if (s.substring(1, 6).compareToIgnoreCase("DL,01") == 0) {
                 String s1 = s.substring(10, s.length() - 1), s2 = "";

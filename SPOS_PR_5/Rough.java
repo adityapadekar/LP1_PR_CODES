@@ -1,42 +1,75 @@
+import java.util.Scanner;
+
 public class Rough {
     public static void main(String[] args) {
-        int[] processIds = { 1, 2, 3, 4 };
-        int[] arrivalTimes = { 0, 1, 2, 3 };
-        int[] burstTimes = { 6, 8, 7, 3 };
+        Scanner input = new Scanner(System.in);
 
-        SJFScheduler(processIds, arrivalTimes, burstTimes);
-    }
+        System.out.print("Enter the number of Processes : ");
+        int noProcess = input.nextInt();
 
-    public static void SJFScheduler(int[] processIds, int[] arrivalTimes, int[] burstTimes) {
-        int n = processIds.length;
-        int[] remainingTimes = burstTimes.clone();
-        int currentTime = 0;
-        int completedCount = 0;
+        int[] processNumber = new int[noProcess];
+        int[] arrivalTime = new int[noProcess];
+        int[] burstTime = new int[noProcess];
+        int[] waitTime = new int[noProcess];
+        int[] turnAroundTime = new int[noProcess];
+        waitTime[0] = 0;
 
-        while (completedCount < n) {
+        float avgWaitTime = 0, avgTurnAroundTime = 0;
+        System.out.println("Enter the burst time and priority for the processes");
+        for (int i = 0; i < noProcess; i++) {
+            System.out.print("Burst time of Process " + (i + 1) + " : ");
+            burstTime[i] = input.nextInt();
+            System.out.print("Arrival time of Process " + (i + 1) + " : ");
+            arrivalTime[i] = input.nextInt();
+            processNumber[i] = i + 1;
+        }
+
+        int[] remainingTimes = burstTime.clone();
+        int completedTask = 0;
+        int counter = 0;
+
+        while (completedTask < noProcess) {
             int minRemainingTime = Integer.MAX_VALUE;
-            int shortestJobIndex = -1;
-
-            for (int i = 0; i < n; i++) {
-                if (arrivalTimes[i] <= currentTime && remainingTimes[i] < minRemainingTime && remainingTimes[i] > 0) {
+            int idx = -1;
+            for (int i = 0; i < noProcess; i++) {
+                if (arrivalTime[i] <= counter && remainingTimes[i] < minRemainingTime && remainingTimes[i] > 0) {
                     minRemainingTime = remainingTimes[i];
-                    shortestJobIndex = i;
+                    idx = i;
                 }
             }
 
-            if (shortestJobIndex == -1) {
-                currentTime++;
+            counter++;
+
+            if (idx == -1)
                 continue;
+
+            remainingTimes[idx]--;
+
+            if (remainingTimes[idx] == 0) {
+                waitTime[idx] = counter - burstTime[idx];
+                completedTask++;
+                avgWaitTime += waitTime[idx];
             }
 
-            remainingTimes[shortestJobIndex]--;
-            currentTime++;
-
-            if (remainingTimes[shortestJobIndex] == 0) {
-                System.out.println("Process " + processIds[shortestJobIndex] +
-                        " completed at time " + currentTime);
-                completedCount++;
-            }
         }
+
+        for (int i = 0; i < noProcess; i++) {
+            turnAroundTime[i] = waitTime[i] + burstTime[i];
+            avgTurnAroundTime += turnAroundTime[i];
+        }
+
+        avgWaitTime /= noProcess;
+        avgTurnAroundTime /= noProcess;
+
+        // Print process details, average wait time, and average turnaround time
+        for (int i = 0; i < noProcess; i++) {
+            System.out.println(processNumber[i] + "\t" + burstTime[i] + "\t" + turnAroundTime[i]);
+        }
+        // Print average wait time and turnaround time
+        System.out.println("Average wait time is : " + avgWaitTime);
+        System.out.println("Average turn around time is : " + avgTurnAroundTime);
+
+        input.close();
+        input.close();
     }
 }

@@ -49,7 +49,7 @@ public class SJF {
             if (taskIndex == -1) {
                 continue;
             }
-
+            
             remainingTimes[taskIndex]--;
 
             if (remainingTimes[taskIndex] == 0) {
