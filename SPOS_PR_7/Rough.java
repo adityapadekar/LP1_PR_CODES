@@ -2,7 +2,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 
 public class Rough {
-    public static int[] optimal(int arr[], int capacity) {
+    public static int[] func(int arr[], int capacity) {
 
         HashSet<Integer> slot = new HashSet<>();
 
@@ -21,38 +21,36 @@ public class Rough {
                 if (!slot.contains(arr[i])) {
 
                     int res = -1;
-                    int farthest = -1;
+                    int idx = -1;
 
                     Iterator<Integer> itr = slot.iterator();
 
                     while (itr.hasNext()) {
                         int temp = itr.next();
                         int j;
-                        for (j = i + 1; j < arr.length; j++) {
-                            if (temp == arr[j]) {
-                                if (j > farthest) {
+
+                        for (j = i + 1; i < arr.length; i++) {
+                            if (temp == arr[i]) {
+                                if (j > idx) {
+                                    idx = j;
                                     res = temp;
-                                    farthest = j;
                                 }
                                 break;
                             }
                         }
 
                         if (j == arr.length) {
-                            res = temp;
+                            res = itr.next();
                             break;
                         }
                     }
 
-                    if (res == -1)
+                    if (idx == -1)
                         res = itr.next();
 
                     slot.remove(res);
-
                     slot.add(arr[i]);
-
                     pageFaults++;
-
                 } else {
                     pageHits++;
                 }
@@ -70,7 +68,7 @@ public class Rough {
 
         int capacity = 4;
 
-        int[] ans = optimal(pages, capacity);
+        int[] ans = func(pages, capacity);
 
         System.out.println("Page Hits : " + ans[0] + "\nPage Faults : " + ans[1]);
     }
