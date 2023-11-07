@@ -28,24 +28,22 @@ public class Rough {
                     while (itr.hasNext()) {
                         int temp = itr.next();
                         int j;
-
-                        for (j = i + 1; i < arr.length; i++) {
-                            if (temp == arr[i]) {
+                        for (j = i + 1; j < arr.length; j++) {
+                            if (arr[j] == temp) {
                                 if (j > idx) {
-                                    idx = j;
                                     res = temp;
+                                    idx = j;
                                 }
                                 break;
                             }
                         }
 
                         if (j == arr.length) {
-                            res = itr.next();
+                            res = temp;
                             break;
                         }
                     }
-
-                    if (idx == -1)
+                    if (res == -1)
                         res = itr.next();
 
                     slot.remove(res);

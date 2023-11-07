@@ -4,8 +4,6 @@ public class pass1 {
 
     public static void main(String args[]) throws IOException {
 
-        BufferedReader br;
-
         String IS[] = { "STOP", "ADD", "SUB", "MUL", "MOVER", "MOVEM" };
         String REG[] = { "AREG", "BREG", "CREG", "DREG" };
         String AD[] = { "START", "END" };
@@ -80,7 +78,7 @@ public class pass1 {
                         for (int j = 0; j < symp; j++) {
                             if (words[i].equals(symIdx[j])) {
                                 symAdd[j] = address;
-                                continue;
+                                break;
                             }
                         }
                     }
@@ -101,6 +99,7 @@ public class pass1 {
             ltf.write(i + "\t\t" + litAdd[i] + "\n");
         }
 
+        input.close();
         imc.close();
         stf.close();
         ltf.close();

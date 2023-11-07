@@ -47,7 +47,7 @@ public class pass2 {
                     f1.write(symSymbol.get(Integer.parseInt(s.substring(10 + offset, s.length() - 1))) + "\n");
                 } else
                     f1.write(litAddr.get(Integer.parseInt(s.substring(10 + offset, s.length() - 1))) + "\n");
-            } else if (s.substring(1, 6).compareToIgnoreCase("DL,01") == 0) {
+            } else if (s.substring(1, 3).compareToIgnoreCase("DL") == 0) {
                 String s1 = s.substring(10, s.length() - 1), s2 = "";
                 for (int i = 0; i < 3 - s1.length(); i++)
                     s2 += "0";
