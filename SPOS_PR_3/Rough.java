@@ -11,7 +11,7 @@ public class Rough {
 
         HashMap<String, Integer> pnt = new HashMap<>();
 
-        int pNo = 1, mdtp = 1, pp = 1, kp = 0, kpdtp = 0, flag = 0;
+        int pNo = 1, mdtp = 1, pp = 0, kp = 0, kpdtp = 0, flag = 0;
 
         String s;
 
