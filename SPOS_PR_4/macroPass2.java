@@ -31,7 +31,7 @@ public class macroPass2 {
 		while ((s = b2.readLine()) != null) {
 			String word[] = s.split("\\s");
 			s1 = word[0] + word[1];
-			macroNameHash.put(word[0], 1);
+			macroNameHash.put(word[0], Integer.parseInt(word[1]));
 			kpHash.put(s1, Integer.parseInt(word[2]));
 			mdtpHash.put(s1, Integer.parseInt(word[3]));
 			kpdtpHash.put(s1, Integer.parseInt(word[4]));

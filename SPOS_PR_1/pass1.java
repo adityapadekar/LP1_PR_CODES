@@ -1,147 +1,109 @@
-import java.util.*;
 import java.io.*;
 
 public class pass1 {
-    static int address = 0;
-    static int sadd[] = new int[10];
-    static int ladd[] = new int[10];
 
-    public static void main(String args[]) {
+    public static void main(String args[]) throws IOException {
 
         BufferedReader br;
-        OutputStream oo;
-        String input = null;
 
-        String IS[] = { "ADD", "SUB", "MUL", "MOV" };
-        String UserReg[] = { "AREG", "BREG", "CREG", "DREG" };
+        String IS[] = { "STOP", "ADD", "SUB", "MUL", "MOVER", "MOVEM" };
+        String REG[] = { "AREG", "BREG", "CREG", "DREG" };
         String AD[] = { "START", "END" };
-        String DL[] = { "DC", "DS" };
-        int lc = 0;
-        int scount = 0, lcount = 0;
-        int flag = 0, flag2 = 0, stored = 0;
+        String DS[] = { "DC", "DS" };
 
-        String tokens[] = new String[30];
-        String tt = null;
+        int address = 0;
+        String[] symIdx = new String[20];
+        String[] litIdx = new String[20];
+        int[] symAdd = new int[20];
+        int[] litAdd = new int[20];
 
-        String sv[] = new String[10];
-        String lv[] = new String[10];
+        BufferedReader input = new BufferedReader(new FileReader("input.txt"));
+        FileWriter imc = new FileWriter("IM.txt");
+        FileWriter stf = new FileWriter("ST.txt");
+        FileWriter ltf = new FileWriter("LT.txt");
 
-        try {
-            br = new BufferedReader(new FileReader("input.txt"));
-            File f = new File("IM.txt");
-            File f1 = new File("ST.txt");
-            File f2 = new File("LT.txt");
-            PrintWriter p = new PrintWriter(f);
-            PrintWriter p1 = new PrintWriter(f1);
-            PrintWriter p2 = new PrintWriter(f2);
-            int k = 0, l = 0;
-            while ((input = br.readLine()) != null) {
-                StringTokenizer st = new StringTokenizer(input, " ");
-                while (st.hasMoreTokens()) {
-                    tt = st.nextToken();
-                    // System.out.println(tt);
+        int symp = 0, litp = 0;
+        String s;
 
-                    if (tt.matches("\\d*") && tt.length() > 2) {
-                        lc = Integer.parseInt(tt);
-                        p.println(lc);
-                        address = lc - 1;
-                    } else {
-                        for (int i = 0; i < AD.length; i++) {
-                            if (tt.equals(AD[i])) {
-                                p.print("AD " + (i + 1) + " ");
-                            }
-
+        while ((s = input.readLine()) != null) {
+            String[] words = s.split(" ");
+            for (int i = 0; i < words.length; i++) {
+                if (words[i].matches("\\d*") && words[i].length() > 2) {
+                    int adr = Integer.parseInt(words[i]);
+                    imc.write("(C," + Integer.parseInt(words[i]) + ")\n");
+                    address = adr;
+                } else {
+                    for (int j = 0; j < AD.length; j++) {
+                        if (words[i].equals(AD[j])) {
+                            imc.write("(AD," + (j + 1) + ")");
                         }
+                    }
 
-                        for (int i = 0; i < IS.length; i++) {
-                            if (tt.equals(IS[i])) {
-                                p.print("IS " + (i + 1) + " ");
-
-                            }
+                    for (int j = 0; j < IS.length; j++) {
+                        if (words[i].equals(IS[j])) {
+                            imc.write("(IS," + (j + 1) + ")");
                         }
-                        for (int i = 0; i < UserReg.length; i++) {
-                            if (tt.equals(UserReg[i])) {
-                                p.print((i + 1) + " ");
+                    }
+                    for (int j = 0; j < REG.length; j++) {
+                        if (words[i].equals(REG[j])) {
+                            imc.write("(" + (j + 1) + ")");
+                        }
+                    }
+                    for (int j = 0; j < DS.length; j++) {
+                        if (words[i].equals(DS[j])) {
+                            imc.write("(DL," + (j + 1) + ")");
+                        }
+                    }
+                    if (words[i].length() == 1 && (words[words.length - 1].equals(words[i]))) {
+                        int flag = 0;
+                        for (int j = 0; j < symp; j++) {
+                            if (words[i].equals(symIdx[j])) {
+                                imc.write("(S," + j + ")\n");
                                 flag = 1;
-                            }
-
-                        }
-                        for (int i = 0; i < DL.length; i++) {
-                            if (tt.equals(DL[i])) {
-                                p.print("DL " + (i + 1) + " ");
+                                break;
                             }
                         }
-                        if (tt.length() == 1 && !(st.hasMoreTokens()) && flag == 1) {
-
-                            if (Arrays.asList(sv).contains(tt)) {
-
-                                for (int i = 0; i < scount; i++) {
-
-                                    if (sv[i].equals(tt)) {
-                                        p.print("S" + i);
-                                        flag2 = 1;
-                                    } else {
-                                        flag2 = 0;
-                                    }
-                                }
-
-                            } else {
-                                p.print("S" + scount);
-                                sv[scount] = tt;
-                                flag2 = 1;
-                                scount++;
+                        if (flag == 0) {
+                            imc.write("(S," + symp + ")\n");
+                            symIdx[symp++] = words[i];
+                        }
+                    }
+                    if (words[i].length() == 2 && (words[words.length - 1].equals(words[i]))
+                            && words[i].charAt(0) == '=') {
+                        imc.write("(L," + litp + ")\n");
+                        litIdx[litp++] = words[i];
+                    }
+                    if (words[i].matches("\\d*")) {
+                        imc.write("(C," + Integer.parseInt(words[i]) + ")\n");
+                    }
+                    if (words[i].length() == 1 && i == 0) {
+                        for (int j = 0; j < symp; j++) {
+                            if (words[i].equals(symIdx[j])) {
+                                symAdd[j] = address;
+                                continue;
                             }
-
                         }
-
-                        if (tt.length() == 1 && (st.hasMoreTokens())) {
-                            p.print(tt + " ");
-                            sadd[k] = address;
-                            k++;
-
-                        }
-
-                        if (tt.charAt(0) == '=') {
-                            p.print("L" + lcount);
-                            lv[lcount] = tt;
-                            lcount++;
-                        }
-                        if (!st.hasMoreTokens()) {
-                            p.println();
-                        }
-
-                        if (tt.equals("DS")) {
-                            int a = Integer.parseInt(st.nextToken());
-                            address = address + a - 1;
-                            p.println();
-                        }
-
                     }
 
                 }
-                // System.out.println();
-                address++;
             }
-            p.close();
-            address--;
-
-            for (int i = 0; i < lcount; i++) {
-                ladd[i] = address;
-                address++;
-            }
-
-            for (int i = 0; i < scount; i++) {
-                p1.println(i + "\t" + sv[i] + "\t" + sadd[i]);
-            }
-            p1.close();
-
-            for (int i = 0; i < lcount; i++) {
-                p2.println(i + "\t" + lv[i] + "\t" + ladd[i]);
-            }
-            p2.close();
-        } catch (Exception e) {
-            e.printStackTrace();
+            address++;
         }
-    }
+        address--;
+        for (int i = 0; i < litp; i++) {
+            litAdd[i] = address;
+            address++;
+        }
+        for (int i = 0; i < symp; i++) {
+            stf.write(i + "\t\t\t" + symAdd[i] + "\n");
+        }
+        for (int i = 0; i < litp; i++) {
+            ltf.write(i + "\t\t" + litAdd[i] + "\n");
+        }
 
+        imc.close();
+        stf.close();
+        ltf.close();
+
+    }
 }
